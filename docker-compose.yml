@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    web:
+        container_name: web
+        image: nginx:alpine
+        depends_on:
+            - app
+        ports:
+            - "80:80"
+        volumes:
+            - ./web/conf.d:/etc/nginx/conf.d
+        networks:
+            - nginx_network
+        
+    app:
+        container_name: app
+        image: fastapi_app
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+        expose:
+            - 8080
+        networks:
+            - nginx_network
+    
+networks:
+    nginx_network:
+        driver: bridge
